@@ -1,4 +1,4 @@
-import * as AMF from './../amf/amf.js';
+import * as AMF from '../amf/amf.js';
 
 export function isSerializable(obj) {
   if(!obj) {
