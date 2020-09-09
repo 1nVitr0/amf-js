@@ -1,6 +1,6 @@
 # AMF serialization & deserialization in JS
 
-A simple typescript wrapper around [infomaniac-amf](https://github.com/infomaniac-amf/js). Full credit to [Danny Kopping](https://github.com/dannykopping).
+A simple Node.JS wrapper around [infomaniac-amf](https://github.com/infomaniac-amf/js). Full credit to [Danny Kopping](https://github.com/dannykopping).
 
 ## Intro
 
