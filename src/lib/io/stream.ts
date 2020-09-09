@@ -1,5 +1,7 @@
 export default class Stream {
-  constructor(raw) {
+  protected raw: string;
+
+  constructor(raw?: any) {
     if (!raw || typeof raw == 'undefined') {
       raw = '';
     }

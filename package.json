@@ -1,14 +1,19 @@
 {
   "name": "amf-convert",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/1nVitr0/amf-js"
   },
-  "main": "src/index.js",
-  "files": ["src/**/*"],
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "files": [
+    "./dist"
+  ],
   "scripts": {
+    "build": "tsc",
+    "production": "tsc -p tsconfig.production.json",
     "test": "node test/index.js"
   },
   "dependencies": {
@@ -20,5 +25,9 @@
     "email": "becker.aram@gmail.com",
     "url": "https://arambecker.de"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^14.6.4",
+    "typescript": "^4.0.2"
+  }
 }

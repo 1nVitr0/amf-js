@@ -2,6 +2,12 @@ import OutputStream from '../io/output.js';
 import InputStream from '../io/input.js';
 import Serializer from './serializer.js';
 import Deserializer from './deserializer.js';
+import { AmfDatatype } from './spec';
+
+export interface ClassType {
+  importData?: (data: any) => void;
+  [key: string]: any;
+} 
 
 export const CLASS_MAPPING = 0x01;
 export const DEFAULT_OPTIONS = 0x00;
@@ -18,7 +24,7 @@ const classMappings = {};
  * @param options
  * @returns {*}
  */
-export function serialize(data, includeType, forceType, options) {
+export function serialize(data: object, includeType?: boolean, forceType?: AmfDatatype, options?: any): any {
   options = typeof options == 'undefined' ? DEFAULT_OPTIONS : options;
 
   const stream = new OutputStream();
@@ -33,10 +39,10 @@ export function serialize(data, includeType, forceType, options) {
  * @param forceType
  * @returns {*}
  */
-export function deserialize(data, forceType) {
+export function deserialize(data: any, forceType?: AmfDatatype): object {
   const stream = new InputStream(data);
   const deserializer = new Deserializer(stream);
-  return deserializer.deserialize(forceType);
+  return deserializer.deserialize();
 }
 
 /**
@@ -46,7 +52,7 @@ export function deserialize(data, forceType) {
  * @param data
  * @returns {}
  */
-export function parse(data)  {
+export function parse(data: any): object  {
   return deserialize(data);
 }
 
@@ -58,7 +64,7 @@ export function parse(data)  {
  * @param options
  * @returns {}
  */
-export function stringify(data, options)  {
+export function stringify(data: object, options: any): any  {
   return serialize(data, true, undefined, options);
 }
 
@@ -68,7 +74,7 @@ export function stringify(data, options)  {
  * @param alias
  * @param obj
  */
-export function registerClassAlias(alias, obj) {
+export function registerClassAlias<T>(alias: number, obj: T) {
   classMappings[alias] = obj;
 }
 
@@ -78,7 +84,7 @@ export function registerClassAlias(alias, obj) {
  * @param alias
  * @returns {*}
  */
-export function getClassByAlias(alias) {
+export function getClassByAlias(alias: string): (new () => ClassType) | null {
   if(!(alias in classMappings)) {
     return null;
   }

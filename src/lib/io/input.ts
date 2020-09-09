@@ -1,8 +1,8 @@
 import Stream from './stream.js';
 import { unpack } from '../util/ieee754.js';
 
-function fromAscii(data) {
-  var bytes = [];
+function fromAscii(data: string) {
+  var bytes: number[] = [];
   var reversed = data.split('');
   for(var i in reversed) {
     bytes.push(reversed[i].toString().charCodeAt(0));
@@ -12,11 +12,10 @@ function fromAscii(data) {
 };
 
 export default class InputStream extends Stream {
-  constructor(raw) {
-    // call super
-    super(raw);
+  protected pointer = 0;
 
-    this.pointer = 0;
+  constructor(raw: any) {
+    super(raw);
   }
   readByte () {
     return this.readBytes(1);
@@ -24,18 +23,11 @@ export default class InputStream extends Stream {
   readRawByte () {
     return this.readBytes(1, true);
   }
-  readRawBytes (length) {
-    if (typeof length == 'undefined')
-      length = 1;
+  readRawBytes (length: number = 1) {
     return this.readBytes(length, true);
   }
-  readBytes (length, raw) {
-    if (typeof length == 'undefined')
-      length = 1;
-    if (typeof raw == 'undefined')
-      raw = false;
-
-    value = this.getRaw().substr(this.pointer, length);
+  readBytes (length: number = 1, raw: boolean = false): string {
+    const value = this.getRaw().substr(this.pointer, length);
     this.pointer += value.length;
 
     if (raw) {

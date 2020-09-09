@@ -5,19 +5,22 @@ import { isSerializable, getObjectKeys, getClassName } from '../util/object.js';
 import ByteArray from '../type/bytearray.js';
 import utf8 from 'utf8';
 import SerializationException from '../exception/serialization.js';
+import OutputStream from '../io/output';
+import { AmfDatatype } from './spec';
 
 const { encode } = utf8;
 
 export default class Serializer extends BaseSerializer{
-  constructor(stream, options) {
+  protected stream: OutputStream;
+  protected options: object;
+
+  constructor(stream: OutputStream, options: object) {
     super(stream);
     
+    this.stream = stream;
     this.options = options;
   }
-  serialize (data, includeType, forceType) {
-    if (typeof includeType == 'undefined')
-      includeType = true;
-
+  serialize (data: any, includeType: boolean = true, forceType?: AmfDatatype) {
     var type = forceType ? forceType : this.getDataType(data);
 
     // add the AMF type marker for this data before the serialized data is added
@@ -97,7 +100,7 @@ export default class Serializer extends BaseSerializer{
   serializeDouble (data) {
     this.stream.writeDouble(data);
   }
-  serializeString (data, useRefs) {
+  serializeString (data: any, useRefs: boolean = false) {
     useRefs = typeof useRefs == 'undefined' ? true : useRefs;
 
     if (useRefs) {
@@ -113,7 +116,7 @@ export default class Serializer extends BaseSerializer{
     this.serializeInt((encoded.length << 1) | 1);
     this.stream.writeRaw(encoded);
   }
-  serializeDate (data) {
+  serializeDate (data: any) {
     var ref = this.referenceStore.getReference(data, ReferenceStore.TYPE_OBJECT);
     if (ref !== false) {
       //use reference

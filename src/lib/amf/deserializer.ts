@@ -5,15 +5,21 @@ import ReferenceStore from '../util/reference-store.js';
 import ByteArray from '../type/bytearray.js';
 import utf8 from 'utf8';
 import DeserializationException from '../exception/deserialization.js';
+import { Stream } from 'stream';
+import InputStream from '../io/input';
+import { ClassType } from './amf';
 
 const { decode } = utf8;
 
 export default class Deserializer extends BaseSerializer {
-  constructor(stream) {
+  protected stream: InputStream;
+
+  constructor(stream: InputStream) {
     super(stream);
+    this.stream = stream;
   }
-  deserialize (data) {
-    var type = this.stream.readByte(data);
+  deserialize () {
+    var type = this.stream.readByte();
 
     switch (parseInt(type)) {
       case AMF3_UNDEFINED:
@@ -58,19 +64,19 @@ export default class Deserializer extends BaseSerializer {
 
     var n = 0;
     var b = this.stream.readByte();
-    while ((b & 0x80) !== 0 && n < 3) {
+    while ((+b & 0x80) !== 0 && n < 3) {
       result <<= 7;
-      result |= (b & 0x7F);
+      result |= (+b & 0x7F);
       b = this.stream.readByte();
       n++;
     }
     if (n < 3) {
       result <<= 7;
-      result |= b;
+      result |= +b;
     }
     else {
       result <<= 8;
-      result |= b;
+      result |= +b;
       if ((result & 0x10000000) !== 0) {
         result |= 0xE0000000;
       }
@@ -123,7 +129,7 @@ export default class Deserializer extends BaseSerializer {
 
     var size = reference >> REFERENCE_BIT;
 
-    var arr = [];
+    var arr: any[] = [];
     this.referenceStore.addReference(arr, ReferenceStore.TYPE_OBJECT);
 
     var key = this.deserializeString();
@@ -150,7 +156,7 @@ export default class Deserializer extends BaseSerializer {
     var classAlias = this.deserializeString();
 
     // need some kinda of callback function here to mix in the class' prototype to provide serializable functionality
-    var instance = {};
+    var instance: ClassType = {};
 
     // add a new reference at this stage - essential to handle self-referencing objects
     this.referenceStore.addReference(instance, ReferenceStore.TYPE_OBJECT);
@@ -204,13 +210,14 @@ export default class Deserializer extends BaseSerializer {
   }
 }
 
-var applyDataToInstance = function(instance, data) {
-  try {
-    for(var key in data) {
+var applyDataToInstance = function(instance: object, data: object) {
+  
+  for(var key in data) {
+    try {
       var val = data[key];
       instance[key] = val;
+    } catch(e) {
+      throw new DeserializationException("Property '" + key + "' cannot be set on instance '" + (typeof instance) + "'");
     }
-  } catch(e) {
-    throw new DeserializationException("Property '" + key + "' cannot be set on instance '" + (typeof instance) + "'");
   }
 };

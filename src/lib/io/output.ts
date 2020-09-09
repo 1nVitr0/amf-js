@@ -12,7 +12,7 @@ function toAscii(bytes) {
 };
 
 export default class OutputStream extends Stream {
-  constructor(raw) {
+  constructor(raw?: any) {
     // call super
     super(raw);
   }
@@ -26,7 +26,7 @@ export default class OutputStream extends Stream {
    * Write a stream of bytes as signed chars
    */
   writeDouble (double) {
-    this.raw += toAscii(pack(double, 11, 52));
+    this.raw += toAscii(pack(double)); // in pack , 11, 52
   }
   /**
    * Write raw bytes

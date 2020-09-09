@@ -1,6 +1,8 @@
 import indexOf from './indexof.js';
 
 export default class ReferenceStore {
+  protected store: object;
+
   static TYPE_STRING = 'string';
   static TYPE_OBJECT = 'object';
 

@@ -4,7 +4,7 @@
  * Slightly modified version of Mozilla indexOf polyfill
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf#Compatibility
  */
-export default function(array, searchElement, fromIndex) {
+export default function<T>(array: T[], searchElement: T, fromIndex = 0) {
   if(array === undefined || array === null) {
     throw new TypeError('"array" is null or not defined');
   }

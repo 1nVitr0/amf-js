@@ -21,7 +21,7 @@ export function getObjectKeys(data) {
     return [];
   }
 
-  const keys = [];
+  const keys: string[] = [];
   for(const key in data) {
     if(key == AMF.CLASS_MAPPING_FIELD) {
       continue;

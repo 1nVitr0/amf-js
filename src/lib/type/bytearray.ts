@@ -1,5 +1,7 @@
 export default class ByteArray {
-  constructor(data) {
+  protected data: any;
+
+  constructor(data: any) {
     this.data = data;
   }
 
@@ -7,7 +9,7 @@ export default class ByteArray {
     return this.data;
   }
 
-  setData(data) {
+  setData(data: any) {
     this.data = data;
   }
 

@@ -2,14 +2,20 @@ import { AMF3_UNDEFINED, AMF3_NULL, AMF3_TRUE, AMF3_FALSE, MIN_INT, MAX_INT, AMF
 import ByteArray from '../type/bytearray.js';
 import ReferenceStore from '../util/reference-store.js';
 import NotSupportedException from '../exception/not-supported.js';
+import { AmfDatatype } from './spec';
+import OutputStream from '../io/output';
+import Stream from '../io/stream';
 
 class BaseSerializer {
-  constructor(stream) {
+  protected stream: Stream;
+  protected referenceStore: ReferenceStore;
+
+  constructor(stream: Stream) {
     this.stream = stream;
     this.referenceStore = new ReferenceStore();
   }
 
-  getDataType(data) {
+  getDataType(data: any): AmfDatatype |null {
     switch(true) {
       case typeof data == 'undefined':
         return AMF3_UNDEFINED;

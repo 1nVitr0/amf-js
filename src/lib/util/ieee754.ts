@@ -74,7 +74,7 @@ export function unpack(bytes) {
   var fbits = 52;
 
   // Bytes to bits
-  var bits = [], i, j, b, str,
+  var bits = [] as any[], i, j, b, str,
       bias, s, e, f;
 
   for(i = bytes.length; i; i -= 1) {
