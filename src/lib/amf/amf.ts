@@ -64,7 +64,7 @@ export function parse(data: any): object  {
  * @param options
  * @returns {}
  */
-export function stringify(data: object, options: any): any  {
+export function stringify(data: object, options?: any): any  {
   return serialize(data, true, undefined, options);
 }
 
